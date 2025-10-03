@@ -1,0 +1,33 @@
+---
+title: 'Technical SEO for Modern SPAs'
+description: 'SPA experiences can be SEO powerhouses. Here is how we make sure bots and humans see the same content.'
+date: '2024-07-12'
+categories:
+  - SEO
+  - Architecture
+  - Content
+tags:
+  - structured-data
+  - crawl-budget
+  - rendering
+---
+
+Search engines have caught up with modern JavaScript, but that doesn’t excuse us from doing the fundamentals right.
+
+## Server render critical paths
+
+Hybrid rendering with Next.js App Router lets us stream above-the-fold content while deferring non-critical chunks.
+
+```tsx
+// app/(marketing)/layout.tsx
+export const dynamic = 'force-static';
+export const revalidate = 3600;
+```
+
+## Own your structured data
+
+We ship JSON-LD for each template—organization, breadcrumbs, product/case studies, and blog posts. When you control the schema, you control the narrative.
+
+## Invest in sitemaps & monitoring
+
+Regenerate sitemaps as content changes and watch Google Search Console for anomalies. Pair it with a crawl of prerendered pages each release.

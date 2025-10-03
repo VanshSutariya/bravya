@@ -1,0 +1,38 @@
+---
+title: 'Designing Content Models That Scale'
+description: 'Composable content starts with thoughtful modeling. Here is how we keep marketers fast and engineers sane.'
+date: '2023-10-01'
+categories:
+  - Content
+  - CMS
+  - Strategy
+tags:
+  - content-modeling
+  - governance
+  - localization
+---
+
+Content modeling is collaboration. Marketers need flexibility while engineers need predictability. We bridge the gap with a few principles.
+
+## Model the experience, not the page
+
+Start with journeys and reuse patterns. Define atoms (copy blocks, CTA groups) that can be remixed across templates.
+
+## Governance from day one
+
+Version content models in code. Use automated migrations so environments stay in sync.
+
+```ts
+export const heroSection = defineDocumentType(() => ({
+  name: 'Hero',
+  fields: {
+    eyebrow: { type: 'string', required: true },
+    headline: { type: 'string', required: true },
+    ctas: { type: 'list', of: { type: 'string' } },
+  },
+}));
+```
+
+## Document editorial workflows
+
+Draft → review → publish pipelines with notifications keep everyone aligned. We customize dashboards so stakeholders know exactly what’s shipping next.

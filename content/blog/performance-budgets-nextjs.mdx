@@ -1,0 +1,42 @@
+---
+title: 'Setting Performance Budgets in Next.js'
+description: 'How we design performance budgets for modern Next.js applications and keep them enforceable.'
+date: '2024-09-20'
+categories:
+  - Performance
+  - Frontend
+  - Next.js
+tags:
+  - lighthouse
+  - core-web-vitals
+  - workflow
+---
+
+Performance budgets are the guardrails that keep a product fast as it grows. Without them, it’s easy for regressions to sneak in sprint over sprint.
+
+## 1. Start with user-centric metrics
+
+We frame budgets around Core Web Vitals and real user monitoring (RUM) targets instead of arbitrary bundle sizes.
+
+```ts
+// types/performance-budget.ts
+export interface PerformanceBudget {
+  metric: 'lcp' | 'cls' | 'inp';
+  targetP75: number; // milliseconds for LCP & INP, unitless for CLS
+  source: 'rum' | 'lab';
+}
+
+export const lighthouseBudgets: PerformanceBudget[] = [
+  { metric: 'lcp', targetP75: 2500, source: 'lab' },
+  { metric: 'cls', targetP75: 0.1, source: 'lab' },
+  { metric: 'inp', targetP75: 200, source: 'rum' },
+];
+```
+
+## 2. Wire budgets into CI
+
+We run Lighthouse CI on key templates in parallel with Playwright. Regressions block merges unless the owning engineer provides mitigation notes.
+
+## 3. Close the loop with observability
+
+Budgets are living documents. Pair lab checks with RUM dashboards, alerts, and weekly reviews so the team reacts before regressions hit revenue.

@@ -1,0 +1,40 @@
+---
+title: 'API Hardening Checklist'
+description: 'A repeatable checklist we use before exposing APIs to production traffic.'
+date: '2023-12-15'
+categories:
+  - Backend
+  - Security
+  - Reliability
+tags:
+  - observability
+  - rate-limiting
+  - zero-trust
+---
+
+Before a new API endpoint exits feature flags, it must clear our hardening checklist.
+
+## Authentication & authorization
+
+Enforce zero-trust controls. Every handler should validate identity and scopes, no exceptions.
+
+## Guard rails
+
+- **Rate limiting:** implement token bucket or sliding window algorithms per consumer.
+- **Schema validation:** fail fast with zod or similar to keep undefined behavior out of production.
+- **Circuit breaking:** prevent downstream outages from cascading by shedding traffic gracefully.
+
+```ts
+import { z } from 'zod';
+
+const payloadSchema = z.object({
+  userId: z.string().uuid(),
+  email: z.string().email(),
+});
+
+type Payload = z.infer<typeof payloadSchema>;
+```
+
+## Observability
+
+Structured logging, metrics, and distributed tracing aren’t nice-to-haves. Wire them into dashboards with alerting tuned to business impact.
