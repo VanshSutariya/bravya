@@ -1,3 +1,4 @@
+import type { ComponentPropsWithoutRef } from 'react';
 import type { MDXComponents } from 'mdx/types';
 import Link from 'next/link';
 
@@ -12,8 +13,8 @@ export const mdxComponents: MDXComponents = {
   ul: (props) => <ul className="mt-6 ml-6 list-disc space-y-2" {...props} />,
   ol: (props) => <ol className="mt-6 ml-6 list-decimal space-y-2" {...props} />,
   li: (props) => <li className="text-base leading-7 text-slate-600 dark:text-slate-300" {...props} />,
-  a: (props) => (
-    <Link className="text-brand underline underline-offset-2" {...props} />
+  a: ({ href = '#', ...props }: ComponentPropsWithoutRef<'a'>) => (
+    <Link href={href} className="text-brand underline underline-offset-2" {...props} />
   ),
   code: (props) => (
     <code

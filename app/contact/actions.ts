@@ -93,32 +93,38 @@ export async function submitContactForm(
       body: JSON.stringify(payload),
     });
     const response = await contactHandler(request);
-    const data: any = await response.json();
+    const data = (await response.json()) as {
+      message?: string;
+      errors?: Record<string, string[] | undefined>;
+    };
 
-    // if (!response.ok) {
-    //   return {
-    //     status: 'error',
-    //     message: data?.message ?? 'We could not send your message. Try again shortly.',
-    //     errors: {},
-    //   };
-    // }
+    if (!response.ok) {
+      const normalizedErrors = data.errors
+        ? (Object.fromEntries(
+            Object.entries(data.errors).map(([key, messages]) => [
+              key,
+              messages?.[0] ?? 'Invalid value',
+            ]),
+          ) as ContactActionState['errors'])
+        : {};
+
+      return {
+        status: 'error',
+        message: data.message ?? 'We could not send your message. Try again shortly.',
+        errors: normalizedErrors,
+      };
+    }
 
     return {
       status: 'success',
-      message: 'Thanks! We will be in touch soon.',
+      message: data.message ?? 'Thanks! We will be in touch soon.',
       errors: {},
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[contact] server action failed', error);
-    // return {
-    //   status: 'error',
-    //   message: 'We hit a snag sending your message. Please retry.',
-    //   errors: {},
-    // };
-
     return {
-      status: 'success',
-      message: 'Thanks! We will be in touch soon.',
+      status: 'error',
+      message: 'We hit a snag sending your message. Please retry.',
       errors: {},
     };
   }

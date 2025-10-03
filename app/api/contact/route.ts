@@ -31,15 +31,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await sendContactEmail(parsed.data);
-    // return NextResponse.json({
-    //   message: result.mocked
-    //     ? 'Message received. SMTP not configured—email logged for development.'
-    //     : 'Thanks! We will be in touch within two business days.',
-    // });
-
+    const { mocked } = await sendContactEmail(parsed.data);
     return NextResponse.json({
-      message: 'Thanks! We will be in touch within two business days.',
+      message: mocked
+        ? 'Message received. SMTP not configured—email logged for development.'
+        : 'Thanks! We will be in touch within two business days.',
     });
   } catch (error) {
     console.error('[contact] Failed to send email', error);
